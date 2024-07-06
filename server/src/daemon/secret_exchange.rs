@@ -46,7 +46,7 @@ impl SecretExchange {
     pub fn create_shared_secret(&self, exchange: &str) -> String {
         let decoded = decode(exchange).unwrap();
         let public_key = Key::new(decoded.get(PUBLIC).unwrap().to_vec());
-        let aes_key = Key::generate_aes_key(&self.private_key, &public_key);
+        let aes_key = Key::generate_aes_key_for_secret_exchange(&self.private_key, &public_key);
         let map = HashMap::from([(PRIVATE, aes_key.as_ref())]);
 
         encode(&map)
@@ -95,7 +95,7 @@ impl SecretExchange {
 
     pub fn new() -> Self {
         let private_key = Key::generate_private_key();
-        let public_key = Key::generate_public_key(&private_key);
+        let public_key = Key::generate_public_key_for_secret_exchange(&private_key);
 
         Self {
             private_key,
